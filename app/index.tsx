@@ -1,34 +1,53 @@
-import { Link } from "expo-router";
+import polls from "@/data/polls";
+import { supabase } from "@/utils/supabase";
+import { AntDesign } from "@expo/vector-icons";
+import { Link, Stack } from "expo-router";
+import { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const DATA = [
-  {
-    id: "1",
-    question: "What is your favorite color?",
-    options: ["Red", "Green", "Blue"],
-  },
-  {
-    id: "2",
-    question: "What is your favorite animal?",
-    options: ["Dog", "Cat", "Bird"],
-  },
-  {
-    id: "3",
-    question: "What is your favorite food?",
-    options: ["Pizza", "Burger", "Pasta"],
-  },
-];
+
 
 export default function Index() {
+
+  const [polls, setPolls] = useState([]);
+
+  useEffect(() => {
+
+    const fetchPolls = async () => {
+      let { data, error } = await supabase
+        .from('polls')
+        .select('*')
+      if (error) {
+        console.error(error);
+        return;
+      }
+      console.log(data);
+      setPolls(data);
+
+    }
+    fetchPolls();
+
+  }, []);
+
   return (
     <View
       style={{
         flex: 1,
       }}
     >
+      <Stack.Screen options={{ 
+        title: "Polls",
+        headerRight: () => (
+          <Link href={'/poll/new'} asChild>
+            <Pressable>
+            <AntDesign name="pluscircleo" size={24} color="black" />
+            </Pressable>
+          </Link>
+        )
+         }} />
       <FlatList
-        data={DATA}
+        data={polls}
         contentContainerStyle={{
           gap: 20,
         }}
