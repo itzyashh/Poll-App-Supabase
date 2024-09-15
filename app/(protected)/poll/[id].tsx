@@ -17,7 +17,6 @@ const Page = () => {
     const [userVote, setUserVote] = useState<VOTE>()
     const [loading, setLoading] = useState(false)
 
-    console.log('userVode345', userVote)
     useEffect(() => {
 
         const fetchPoll = async () => {
@@ -68,10 +67,8 @@ const Page = () => {
         }
 
         if (userVote) {
-            console.log('userVote', userVote)
             newVote.id = userVote.id
         }
-        console.log(newVote, 'newVote')
         setLoading(true)
         if (!selectedOption) {
             return
