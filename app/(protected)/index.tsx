@@ -1,16 +1,16 @@
-import polls from "@/data/polls";
 import { supabase } from "@/utils/supabase";
 import { AntDesign } from "@expo/vector-icons";
-import { Link, Redirect, Stack } from "expo-router";
+import { Link, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Database } from '@/types/supabase';
+import { POLL } from "@/types/db";
 
 
 
 export default function Index() {
 
-  const [polls, setPolls] = useState([]);
+  const [polls, setPolls] = useState<POLL[]>([]);
 
   useEffect(() => {
     
@@ -19,6 +19,7 @@ export default function Index() {
       let { data, error } = await supabase
         .from('polls')
         .select('*')
+        .returns<POLL[]>();
       if (error) {
         console.error(error);
         return;
@@ -69,7 +70,7 @@ export default function Index() {
           </Link>
           )
         }
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );

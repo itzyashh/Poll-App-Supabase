@@ -1,19 +1,88 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import polls from '@/data/polls'
 import { FontAwesome } from '@expo/vector-icons'
 import { BorderlessButton } from 'react-native-gesture-handler'
 import { supabase } from '@/utils/supabase'
+import { POLL } from '@/types/db'
+import Spinner from 'react-native-loading-spinner-overlay'
+import { useAuth } from '@/providers/AuthProvider'
 
 const Page = () => {
     const { id } = useLocalSearchParams()
-
+    const { user } = useAuth()
+    const [poll, setPoll] = useState<POLL>()
     const [selectedOption, setSelectedOption] = useState<string>()
+    const [loading, setLoading] = useState(false)
+    useEffect(() => {
+
+        const fetchPoll = async () => {
+            setLoading(true)
+            const { data, error } = await supabase
+                .from('polls')
+                .select('*')
+                .eq('id', id)
+                .single()
+            if (error) {
+                console.log(error)
+            }
+            setPoll(data)
+            setLoading(false)
+            
+        }
+
+        const fetchVote = async () => {
+
+            if (!user) {
+                return
+            }
+
+            const { data, error } = await supabase
+                .from('votes')
+                .select('*')
+                .eq('poll_id', id)
+                .eq('user_id', user?.id)
+                .limit(1)
+                .order('created_at', { ascending: false })
+                .single()
+            if (error) {
+                console.log(error)
+            }
+            console.log(data, 'data')
+            setSelectedOption(data?.option)
+        }
+        fetchPoll()
+        fetchVote()
+
+    }, [id])
+
+    const onSubmit = async () => {
+        setLoading(true)
+        if (!selectedOption) {
+            return
+        }
+        const { error } = await supabase
+            .from('votes')
+            .insert([{
+                poll_id: id,
+                option: selectedOption,
+                user_id: user?.id
+            }])
+        if (error) {
+            console.log(error)
+            alert('An error occurred')
+        }
+        setLoading(false)
+    }
+
+
+ 
+
 
     return (
         <View style={styles.container}>
+            <Spinner visible={loading} />
             <Text style={styles.question}>{poll?.question}</Text>
             <View style={{ gap: 10 }}>
                 {
@@ -31,6 +100,22 @@ const Page = () => {
             <Pressable onPress={()=> setSelectedOption(undefined)}>
                 <Text>Clear</Text>
             </Pressable>
+
+            <Pressable
+            disabled={!selectedOption}
+             onPress={onSubmit} style={styles.submitButton}>
+                <Text style={styles.submitButtonText} >Submit</Text>
+            </Pressable>
+
+
+
+     { poll?.author && <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                <Text>Author: {poll?.author}</Text>
+            </View>}
+               
+
+
+
         </View>
     )
 }
@@ -64,6 +149,16 @@ const styles = StyleSheet.create({
         gap: 10
     },
     option: {
+        fontSize: 16
+    },
+    submitButton: {
+        backgroundColor: 'blue',
+        padding: 15,
+        borderRadius: 10,
+        alignItems: 'center'
+    },
+    submitButtonText: {
+        color: '#fff',
         fontSize: 16
     }
 })
