@@ -1,7 +1,7 @@
 import polls from "@/data/polls";
 import { supabase } from "@/utils/supabase";
 import { AntDesign } from "@expo/vector-icons";
-import { Link, Stack } from "expo-router";
+import { Link, Redirect, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,6 +13,7 @@ export default function Index() {
   const [polls, setPolls] = useState([]);
 
   useEffect(() => {
+    
 
     const fetchPolls = async () => {
       let { data, error } = await supabase
@@ -36,12 +37,20 @@ export default function Index() {
         flex: 1,
       }}
     >
+      {/* <Redirect href={"/(auth)/login"} /> */}
       <Stack.Screen options={{ 
         title: "Polls",
         headerRight: () => (
           <Link href={'/poll/new'} asChild>
             <Pressable>
             <AntDesign name="pluscircleo" size={24} color="black" />
+            </Pressable>
+          </Link>
+        ),
+        headerLeft: () => (
+          <Link href={'/profile'} asChild>
+            <Pressable>
+            <AntDesign name="user" size={24} color="black" />
             </Pressable>
           </Link>
         )
