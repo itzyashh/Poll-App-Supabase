@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { FontAwesome } from '@expo/vector-icons'
 import { BorderlessButton } from 'react-native-gesture-handler'
 import { supabase } from '@/utils/supabase'
-import { POLL } from '@/types/db'
+import { POLL, VOTE } from '@/types/db'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { useAuth } from '@/providers/AuthProvider'
 
@@ -14,7 +14,10 @@ const Page = () => {
     const { user } = useAuth()
     const [poll, setPoll] = useState<POLL>()
     const [selectedOption, setSelectedOption] = useState<string>()
+    const [userVote, setUserVote] = useState<VOTE>()
     const [loading, setLoading] = useState(false)
+
+    console.log('userVode345', userVote)
     useEffect(() => {
 
         const fetchPoll = async () => {
@@ -49,7 +52,7 @@ const Page = () => {
             if (error) {
                 console.log(error)
             }
-            console.log(data, 'data')
+            setUserVote(data)
             setSelectedOption(data?.option)
         }
         fetchPoll()
@@ -58,17 +61,29 @@ const Page = () => {
     }, [id])
 
     const onSubmit = async () => {
+        const newVote = {
+            poll_id: id,
+            option: selectedOption,
+            user_id: user?.id
+        }
+
+        if (userVote) {
+            console.log('userVote', userVote)
+            newVote.id = userVote.id
+        }
+        console.log(newVote, 'newVote')
         setLoading(true)
         if (!selectedOption) {
             return
         }
-        const { error } = await supabase
+        const { data, error } = await supabase
             .from('votes')
-            .insert([{
-                poll_id: id,
-                option: selectedOption,
-                user_id: user?.id
-            }])
+            .upsert([newVote])
+            .select('*')
+            .single()
+
+            setUserVote(data)
+            
         if (error) {
             console.log(error)
             alert('An error occurred')
