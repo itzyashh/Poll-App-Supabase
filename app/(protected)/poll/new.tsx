@@ -1,12 +1,16 @@
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native'
 import React, { useState } from 'react'
-import { Stack } from 'expo-router'
+import { router, Stack } from 'expo-router'
 import { AntDesign } from '@expo/vector-icons'
+import { supabase } from '@/utils/supabase'
+import { Database } from '@/types/supabase'
+import { useAuth } from '@/providers/AuthProvider'
 
 const Page = () => {
 
     const [title, setTitle] = useState<string>()
     const [options, setOptions] = useState<string[]>(['',''])
+    const { user } = useAuth()
 
     const onClose = (index: number) => {
         const newOptions = [...options]
@@ -14,7 +18,42 @@ const Page = () => {
         setOptions(newOptions)
     }
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
+
+        // validation
+
+        if (!title) {
+            alert('Title is required')
+            return
+        }
+
+        if (options.length < 2) {
+            alert('At least two options are required')
+            return
+        }
+        
+        const emptyOption = options.findIndex(option => !option)
+        if (emptyOption !== -1) {
+            alert(`Option ${emptyOption + 1} is empty`)
+            return
+        }
+        console.log('user', user)
+       const {data, error} = await supabase.from('polls').insert([
+        {
+            question: title,
+            options,
+            author: user?.id
+        }
+    ])
+
+        if (error) {
+            console.error(error)
+            return
+        }
+
+
+
+        router.back()
         console.log({title, options})
     }
 

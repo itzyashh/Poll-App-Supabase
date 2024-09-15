@@ -11,24 +11,35 @@ export type Database = {
     Tables: {
       polls: {
         Row: {
+          author: string | null
           created_at: string
           id: number
           options: string[]
           question: string
         }
         Insert: {
+          author?: string | null
           created_at?: string
           id?: number
           options: string[]
           question: string
         }
         Update: {
+          author?: string | null
           created_at?: string
           id?: number
           options?: string[]
           question?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "polls_author_fkey"
+            columns: ["author"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
