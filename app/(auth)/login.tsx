@@ -11,7 +11,7 @@ import { Stack } from 'expo-router'
 
 
 export default function Page() {
-  const [email, setEmail] = useState('yashjadhav1502@gmail.com')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
 

@@ -24,7 +24,6 @@ export default function Index() {
         console.error(error);
         return;
       }
-      console.log(data);
       setPolls(data);
 
     }

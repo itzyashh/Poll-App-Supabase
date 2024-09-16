@@ -1,40 +1,33 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useLocalSearchParams } from 'expo-router'
+import { Link, Stack, useLocalSearchParams } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
 import { BorderlessButton } from 'react-native-gesture-handler'
 import { supabase } from '@/utils/supabase'
 import { POLL, VOTE } from '@/types/db'
 import Spinner from 'react-native-loading-spinner-overlay'
 import { useAuth } from '@/providers/AuthProvider'
+import { useQuery } from '@tanstack/react-query'
+import { fetchPoll } from '@/api/polls'
 
 const Page = () => {
     const { id } = useLocalSearchParams()
     const { user } = useAuth()
-    const [poll, setPoll] = useState<POLL>()
     const [selectedOption, setSelectedOption] = useState<string>()
     const [userVote, setUserVote] = useState<VOTE>()
     const [loading, setLoading] = useState(false)
 
+
+    const { data: poll, isLoading } = useQuery({
+        queryKey: ['poll', id],
+        queryFn: async () => fetchPoll(parseInt(id[0]))
+    })
+
+    
+    
     useEffect(() => {
-
-        const fetchPoll = async () => {
-            setLoading(true)
-            const { data, error } = await supabase
-                .from('polls')
-                .select('*')
-                .eq('id', id)
-                .single()
-            if (error) {
-                console.log(error)
-            }
-            setPoll(data)
-            setLoading(false)
-            
-        }
-
-        const fetchVote = async () => {
+    const fetchVote = async () => {
 
             if (!user) {
                 return
@@ -47,14 +40,18 @@ const Page = () => {
                 .eq('user_id', user?.id)
                 .limit(1)
                 .order('created_at', { ascending: false })
+                .returns<VOTE>()
                 .single()
             if (error) {
                 console.log(error)
             }
+
+            if (data) {
             setUserVote(data)
-            setSelectedOption(data?.option)
+            setSelectedOption((data as VOTE).option)
+            }
+
         }
-        fetchPoll()
         fetchVote()
 
     }, [id])
@@ -94,7 +91,22 @@ const Page = () => {
 
     return (
         <View style={styles.container}>
-            <Spinner visible={loading} />
+            <Stack.Screen options={{ 
+                title: 'Poll',
+                headerRight: () => (
+                    <Link asChild
+
+                     href={{
+                        pathname: '/poll/result',
+                        params: {id: id}
+                     }}>
+                    <Pressable>
+                    <FontAwesome5 name="chart-bar" size={24} color="black" />
+                    </Pressable>
+                    </Link>
+                )
+                 }} />
+            <Spinner visible={loading || isLoading} />
             <Text style={styles.question}>{poll?.question}</Text>
             <View style={{ gap: 10 }}>
                 {
