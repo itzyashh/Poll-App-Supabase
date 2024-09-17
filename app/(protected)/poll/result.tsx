@@ -48,6 +48,7 @@ const Page = () => {
     <View style={styles.container}>
         <Stack.Screen options={{ 
             title: 'Poll Results',
+            headerTintColor: 'white',
             headerStyle: {
                 backgroundColor: "#4a6dcf",
               },

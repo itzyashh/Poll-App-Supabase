@@ -41,20 +41,21 @@ export default function Index() {
       {/* <Redirect href={"/(auth)/login"} /> */}
       <Stack.Screen options={{ 
         title: "Polls",
+        headerTintColor: "white",
         headerStyle: {
           backgroundColor: "#4a6dcf",
         },
         headerRight: () => (
           <Link href={'/poll/new'} asChild>
             <Pressable>
-            <AntDesign name="pluscircleo" size={24} color="black" />
+            <AntDesign name="pluscircleo" size={24} color="#ffffff" />
             </Pressable>
           </Link>
         ),
         headerLeft: () => (
           <Link href={'/profile'} asChild>
             <Pressable>
-            <AntDesign name="user" size={24} color="black" />
+            <AntDesign name="user" size={24} color="#ffffff" />
             </Pressable>
           </Link>
         )

@@ -93,6 +93,7 @@ const Page = () => {
         <View style={styles.container}>
             <Stack.Screen options={{ 
                 title: 'Poll',
+            headerTintColor: 'white',
                 headerStyle: {
                     backgroundColor: "#4a6dcf",
                   },
@@ -104,7 +105,7 @@ const Page = () => {
                         params: {id: id}
                      }}>
                     <Pressable>
-                    <FontAwesome5 name="chart-bar" size={24} color="black" />
+                    <FontAwesome5 name="chart-bar" size={24} color="#ffffff" />
                     </Pressable>
                     </Link>
                 )
