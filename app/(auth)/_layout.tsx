@@ -14,7 +14,12 @@ const AuthLayout = () => {
 
   return (
     <Stack>
-        <Stack.Screen name="login" options={{ title: 'Login' }} />
+        <Stack.Screen name="login" options={{ 
+          title: 'Login',
+          headerStyle: {
+            backgroundColor: "#4a6dcf",
+          },
+           }} />
     </Stack>
   )
 }

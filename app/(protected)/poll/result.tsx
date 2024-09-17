@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native'
-import { useLocalSearchParams } from 'expo-router'
+import { Stack, useLocalSearchParams } from 'expo-router'
 import { POLL, VOTE } from '@/types/db'
 import { QueryClient, useQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchPoll, getVotes } from '@/api/polls'
@@ -46,6 +46,12 @@ const Page = () => {
 
   return (
     <View style={styles.container}>
+        <Stack.Screen options={{ 
+            title: 'Poll Results',
+            headerStyle: {
+                backgroundColor: "#4a6dcf",
+              },
+            }} />
       <Legend data={data} />
       <BarChart data={data} />
     </View>

@@ -51,6 +51,7 @@ export default function Page() {
           value={email}
           placeholder="email@address.com"
           autoCapitalize={'none'}
+          style={styles.input}
         />
       </View>
       <View style={styles.verticallySpaced}>
@@ -62,6 +63,7 @@ export default function Page() {
           secureTextEntry={true}
           placeholder="Password"
           autoCapitalize={'none'}
+          style={styles.input}
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -76,8 +78,10 @@ export default function Page() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
+    flex: 1,
+    paddingTop: 40,
     padding: 12,
+    backgroundColor: '#030d26',
   },
   verticallySpaced: {
     paddingTop: 4,
@@ -86,5 +90,8 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
+  },
+  input: {
+    color: '#fff',
   },
 })

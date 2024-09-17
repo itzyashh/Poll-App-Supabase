@@ -35,11 +35,15 @@ export default function Index() {
     <View
       style={{
         flex: 1,
+        backgroundColor: "#030d26",
       }}
     >
       {/* <Redirect href={"/(auth)/login"} /> */}
       <Stack.Screen options={{ 
         title: "Polls",
+        headerStyle: {
+          backgroundColor: "#4a6dcf",
+        },
         headerRight: () => (
           <Link href={'/poll/new'} asChild>
             <Pressable>
@@ -64,7 +68,7 @@ export default function Index() {
         renderItem={({item}) => (
           <Link href={`/poll/${item.id}`} asChild >
           <Pressable style={styles.pollContainer}>
-            <Text>{item.question}</Text>
+            <Text style={{color:"#fff"}}>{item.question}</Text>
           </Pressable>
           </Link>
           )
@@ -78,7 +82,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   pollContainer: {
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "#4a6dcf",
     borderRadius: 10,
     shadowColor: "#000",
     shadowOffset: {

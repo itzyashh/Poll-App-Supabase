@@ -93,6 +93,9 @@ const Page = () => {
         <View style={styles.container}>
             <Stack.Screen options={{ 
                 title: 'Poll',
+                headerStyle: {
+                    backgroundColor: "#4a6dcf",
+                  },
                 headerRight: () => (
                     <Link asChild
 
@@ -115,7 +118,7 @@ const Page = () => {
                             <FontAwesome 
                             name={selectedOption === option ? 'check-circle' : 'circle-thin'}
                             size={24} 
-                            color={selectedOption === option ? 'green' : 'black'}/>
+                            color={selectedOption === option ? '#7ddc7d' : 'black'}/>
                             <Text style={styles.option} key={option}>{option}</Text>
                         </Pressable>
                     ))
@@ -150,15 +153,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        gap: 20
+        gap: 20,
+        backgroundColor: '#030d26'
     },
     question: {
         fontSize: 20,
-        fontWeight: '500'
+        fontWeight: '500',
+        color: '#fff'
     },
     optionContainer: {
         padding: 15,
-        backgroundColor: '#fff',
+        backgroundColor: '#4a6dcf',
         borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: {
@@ -173,7 +178,8 @@ const styles = StyleSheet.create({
         gap: 10
     },
     option: {
-        fontSize: 16
+        fontSize: 16,
+        color: '#fff'
     },
     submitButton: {
         backgroundColor: 'blue',
@@ -183,6 +189,7 @@ const styles = StyleSheet.create({
     },
     submitButtonText: {
         color: '#fff',
-        fontSize: 16
+        fontSize: 18,
+        fontWeight: '500'
     }
 })
