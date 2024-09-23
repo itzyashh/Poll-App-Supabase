@@ -1,4 +1,4 @@
-# Welcome to your Expo app 👋
+# Welcome to Polls app 👋
 
 | Image 1 | Image 2 | Image 3 |
 |---|---|---|
